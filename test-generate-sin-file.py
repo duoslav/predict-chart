@@ -1,7 +1,7 @@
 import csv
 import math
 
-filename = "test_sinusoidal_values.csv"
+filename = "sinusoidal_values.csv"
 
 with open(filename, 'w', newline='') as file:
     writer = csv.writer(file)

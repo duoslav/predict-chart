@@ -1,8 +1,8 @@
 {
   "model_file_name": "ecdsa-model.h5",
-  "rows_to_read": 10000,
+  "rows_to_read": 100,
   "train": {
-    "file_name": "train.csv",
+    "file_name": "sinusoidal_values.csv",
     "skip_rows": 0
   },
   "evaluate": {
