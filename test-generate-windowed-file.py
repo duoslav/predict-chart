@@ -1,9 +1,9 @@
 import csv
 
 # Input file name
-input_file = 'sinusoidal_values.csv'
+input_file = 'sinusoidal_values_3600_1.csv'
 # Output file name
-output_file = 'windows.csv'
+output_file = 'windows_3600_1.csv'
 
 # Read data from input file
 with open(input_file, 'r') as f_in:
