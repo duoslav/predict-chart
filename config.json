@@ -1,8 +1,9 @@
 {
   "model_file_name": "ecdsa-model.h5",
   "rows_to_read": 100,
+  "window_size": 16,
   "train": {
-    "file_name": "sinusoidal_values.csv",
+    "file_name": "windows_3600_1.csv",
     "skip_rows": 0
   },
   "evaluate": {

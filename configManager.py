@@ -6,6 +6,7 @@ config_file_name = 'config.json'
 config = {
     "model_file_name": "ecdsa-model.h5",
     "rows_to_read": 10000,
+    "window_size": 16,
     "train": {
         "file_name": "train.csv",
         "skip_rows": 0,
