@@ -178,12 +178,37 @@ def testFileSlicing2():
 def prepareModel():
     # define the keras model
     model = Sequential()
-    model.add(Dense(32, input_shape=(32,), activation='relu'))
+    model.add(Dense(1024, input_shape=(15,), activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
-    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=[binary_accuracy])
+    model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])#metrics=[binary_accuracy])
     plot_model(model, to_file='model.png', show_shapes=True, show_layer_names=True)
     return model
 ################ ОПИСАНИЕ НЕЙРОННОЙ СЕТИ КОНЕЦ ######################
+
+def hexStrToInt(p):
+    key_len = 64#tf.strings.length(p)
+    arr_len = 8#int((key_len + 7) / 8)
+    steps = tf.range(0, key_len, 8)
+    #return steps
+    step_lengths = tf.fill([8], arr_len)
+    #return step_lengths
+#     if key_len % 8 != 0:
+#         step_lengths = tf.tensor_scatter_nd_update(step_lengths, [[arr_len - 1]], [key_len % 8])
+
+    slice = tf.strings.substr(p, [0,8,16,24,32,40,48,56], [8,8,8,8,8,8,8,8])
+    re = tf.py_function(func=toInt, inp=[slice], Tout=[tf.uint32]*8)
+    return re
+    
+def reshapeDataLine(input_string):
+    window_size = config["window_size"]
+    n = window_size - 1
+
+    numbers = tf.io.decode_csv(input_string, record_defaults=[0.0]*window_size, field_delim=',')
+
+    private = numbers[n]
+    public = numbers[0:n]
+    
+    return (public, private)
 
 
 ################ ОБУЧЕНИЕ НЕЙРОННОЙ СЕТИ КОНЕЦ ######################
@@ -191,12 +216,17 @@ def prepareModel():
 def trainModel(model):
     checkpoint = ModelCheckpoint(config["model_file_name"], monitor='loss', verbose=1, save_best_only=True, mode='min')
 
-    keys = getKeys("train")
-    if keys is None:
-        return None
+    # Define the CSV file path
+    csv_file = config["train"]["file_name"]
+
+    # Load the data from the CSV file
+    batch_size = 1
+    ds = tf.data.TextLineDataset(csv_file)
+    ds = ds.map(reshapeDataLine).batch(batch_size)
+#     for p in ds.as_numpy_iterator():
+#         print(p)
     
-    (pub_keys, priv_keys) = keys
-    model.fit(pub_keys, priv_keys, epochs=1, batch_size=1000, verbose=1, callbacks=[checkpoint])
+    model.fit(ds, epochs=1, verbose=1, callbacks=[checkpoint])
 
     return model
 ################ ОБУЧЕНИЕ НЕЙРОННОЙ СЕТИ КОНЕЦ ######################
