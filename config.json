@@ -1,0 +1,16 @@
+{
+  "model_file_name": "ecdsa-model.h5",
+  "rows_to_read": 10000,
+  "train": {
+    "file_name": "train.csv",
+    "skip_rows": 0
+  },
+  "evaluate": {
+    "file_name": "evaluate.csv",
+    "skip_rows": 0
+  },
+  "predict": {
+    "file_name": "predict.csv",
+    "skip_rows": 0
+  }
+}
