@@ -18,9 +18,10 @@ config = getConfig()
 def prepareModel():
     # define the keras model
     model = Sequential()
-    model.add(Dense(1024, input_shape=(15,), activation='relu'))
+    model.add(Dense(90, input_shape=(15,)))
+    model.add(Dense(180, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
-    model.compile(loss='mean_squared_error', optimizer='adam', metrics=['accuracy'])#metrics=[binary_accuracy])
+    model.compile(loss='mean_squared_error', optimizer='SGD', metrics=['accuracy'])
     plot_model(model, to_file='model.png', show_shapes=True, show_layer_names=True)
     return model
 ################ ОПИСАНИЕ НЕЙРОННОЙ СЕТИ КОНЕЦ ######################
@@ -45,13 +46,13 @@ def trainModel(model):
     csv_file = config["train"]["file_name"]
 
     # Load the data from the CSV file
-    batch_size = 1
+    batch_size = 100
     ds = tf.data.TextLineDataset(csv_file)
     ds = ds.map(reshapeDataLine).batch(batch_size)
 #     for p in ds.as_numpy_iterator():
 #         print(p)
     
-    model.fit(ds, epochs=1, verbose=1, callbacks=[checkpoint])
+    model.fit(ds, epochs=100, verbose=1, callbacks=[checkpoint])
 
     return model
 ################ ОБУЧЕНИЕ НЕЙРОННОЙ СЕТИ КОНЕЦ ######################
